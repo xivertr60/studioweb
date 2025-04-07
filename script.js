@@ -1,15 +1,27 @@
 async function generateResponse() {
-    const userInput = document.getElementById("userInput").value.toLowerCase();
-    
-    // Simulación de respuestas dinámicas
-    const responses = {
-        "hola": "¡Hola! ¿Cómo estás?",
-        "¿quién eres?": "Soy Copilot 2.0, tu asistente digital.",
-        "cuéntame un chiste": "¿Por qué el libro de matemáticas estaba triste? Porque tenía demasiados problemas.",
-        "¿cómo estás?": "¡Estoy genial! Siempre listo para ayudarte."
-    };
+    const userInput = document.getElementById("userInput").value;
+    const apiKey = "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"; // ⚠️ No publiques esta clave en GitHub
 
-    let response = responses[userInput] || "Hmm... eso es interesante. Déjame pensar.";
+    const url = "https://api.openai.com/v1/completions";
 
-    document.getElementById("response").innerText = response;
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4",
+                prompt: userInput,
+                max_tokens: 100
+            })
+        });
+
+        const data = await response.json();
+        document.getElementById("response").innerText = data.choices[0].text;
+    } catch (error) {
+        console.error("Error al obtener la respuesta:", error);
+        document.getElementById("response").innerText = "Ups, algo salió mal.";
+    }
 }
