@@ -1,79 +1,87 @@
-// GTA SA 3D DEMO - Escena básica con Three.js
+// Variables globales
+let scene, camera, renderer;
+let personaje, coche;
+let keys = {};
 
-// Setup básico
-const container = document.getElementById('game-container');
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x222233);
+// Iniciar escena
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xaeefff);
 
-const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-camera.position.set(0, 2, 5);
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 5, 10);
 
-// Renderizado
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(container.offsetWidth, container.offsetHeight);
-container.appendChild(renderer.domElement);
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-// Suelo
-const groundGeometry = new THREE.PlaneGeometry(20, 20);
-const groundMaterial = new THREE.MeshPhongMaterial({ color: 0x228822 });
-const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-ground.rotation.x = -Math.PI / 2;
-ground.receiveShadow = true;
-scene.add(ground);
+  // Luz
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(10, 20, 10);
+  scene.add(light);
 
-// Luz
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambientLight);
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
-dirLight.position.set(5, 10, 7);
-scene.add(dirLight);
+  // Terreno base
+  const groundGeo = new THREE.BoxGeometry(50, 1, 50);
+  const groundMat = new THREE.MeshLambertMaterial({ color: 0x55aa55 });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.position.y = -0.5;
+  scene.add(ground);
 
-// Coche "placeholder"
-const carGeometry = new THREE.BoxGeometry(1, 0.5, 2);
-const carMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-const car = new THREE.Mesh(carGeometry, carMaterial);
-car.position.set(0, 0.25, 0);
-scene.add(car);
+  // Obstáculos
+  for(let i=0; i<10; i++) {
+    const obsGeo = new THREE.BoxGeometry(2, 2, 2);
+    const obsMat = new THREE.MeshLambertMaterial({ color: 0x888888 });
+    const obs = new THREE.Mesh(obsGeo, obsMat);
+    obs.position.set(Math.random()*40-20, 1, Math.random()*40-20);
+    scene.add(obs);
+  }
 
-// Controles básicos del coche
-let velocity = 0;
-let angle = 0;
-const maxSpeed = 0.15;
-const turnSpeed = 0.03;
+  // Personaje (cubo)
+  const persGeo = new THREE.BoxGeometry(1, 2, 1);
+  const persMat = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+  personaje = new THREE.Mesh(persGeo, persMat);
+  personaje.position.set(0, 1, 0);
+  scene.add(personaje);
 
-const keys = {};
-window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
-window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+  // Coche (cubo)
+  const cocheGeo = new THREE.BoxGeometry(2, 1, 4);
+  const cocheMat = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+  coche = new THREE.Mesh(cocheGeo, cocheMat);
+  coche.position.set(5, 0.5, 0);
+  scene.add(coche);
 
-function updateCar() {
-  if (keys['w']) velocity = Math.min(velocity + 0.01, maxSpeed);
-  else if (keys['s']) velocity = Math.max(velocity - 0.01, -maxSpeed / 2);
-  else velocity *= 0.95; // fricción
+  // Eventos de teclado
+  window.addEventListener('keydown', (e) => { keys[e.key] = true; });
+  window.addEventListener('keyup', (e) => { keys[e.key] = false; });
 
-  if (keys['a']) angle += turnSpeed * (velocity / maxSpeed);
-  if (keys['d']) angle -= turnSpeed * (velocity / maxSpeed);
-
-  car.rotation.y = angle;
-  car.position.x += Math.sin(angle) * velocity;
-  car.position.z += Math.cos(angle) * velocity;
-  // Cámara sigue al coche
-  camera.position.x = car.position.x - Math.sin(angle) * 5;
-  camera.position.z = car.position.z - Math.cos(angle) * 5;
-  camera.position.y = 2.5;
-  camera.lookAt(car.position.x, car.position.y, car.position.z);
+  animate();
 }
 
-// Animación
+// Movimiento del personaje
+function updatePersonaje() {
+  if(keys['w']) personaje.position.z -= 0.2;
+  if(keys['s']) personaje.position.z += 0.2;
+  if(keys['a']) personaje.position.x -= 0.2;
+  if(keys['d']) personaje.position.x += 0.2;
+}
+
+// Movimiento del coche
+function updateCoche() {
+  if(keys['ArrowUp']) coche.position.z -= 0.4;
+  if(keys['ArrowDown']) coche.position.z += 0.4;
+  if(keys['ArrowLeft']) coche.position.x -= 0.4;
+  if(keys['ArrowRight']) coche.position.x += 0.4;
+}
+
 function animate() {
   requestAnimationFrame(animate);
-  updateCar();
+
+  updatePersonaje();
+  updateCoche();
+
+  camera.lookAt(personaje.position);
+
   renderer.render(scene, camera);
 }
-animate();
 
-// Responsive
-window.addEventListener('resize', () => {
-  renderer.setSize(container.offsetWidth, container.offsetHeight);
-  camera.aspect = container.offsetWidth / container.offsetHeight;
-  camera.updateProjectionMatrix();
-});
+init();
