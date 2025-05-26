@@ -3,7 +3,7 @@ import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.154.0/exampl
 
 // TEXTURAS PÚBLICAS (puedes cambiarlas por otras)
 const TEXTURAS = {
-  suelo: "https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/grasslight-big.jpg",
+  suelo: "https://i.ibb.co/xKytxcpZ/descarga-2.jpg",
   obstaculo: "https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/brick_diffuse.jpg",
   coche: "https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/uv_grid_opengl.jpg",
   personaje: "https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/crate.gif"
