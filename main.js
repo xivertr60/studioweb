@@ -160,3 +160,8 @@ function animate() {
 }
 
 animate();
+import { createBetterCar } from './betterCar.js';
+
+const car = createBetterCar();
+car.position.set(5, 0, 0); // Ajusta la posición inicial
+scene.add(car);
