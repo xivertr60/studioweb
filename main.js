@@ -19,17 +19,21 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-// Terreno
-const terrenoGeo = new THREE.PlaneGeometry(200, 200, 64, 64);
+// Terreno (con deformación en z)
+const size = 200;
+const segments = 64;
+const terrenoGeo = new THREE.PlaneGeometry(size, size, segments, segments);
 
-// Modificar vértices para crear montañas y valles
-for (let i = 0; i < terrenoGeo.vertices?.length || terrenoGeo.attributes.position.count; i++) {
-  let z = Math.random() * 3;
-  const idx = i * 3 + 2;
-  if (terrenoGeo.attributes && terrenoGeo.attributes.position) {
-    terrenoGeo.attributes.position.array[idx] += z;
-  }
+// Deformar el terreno en el eje Y (altura)
+const pos = terrenoGeo.attributes.position;
+for (let i = 0; i < pos.count; i++) {
+  const x = pos.getX(i);
+  const y = pos.getY(i);
+  // Un poco de "montañas" aleatorias
+  const altura = Math.sin(x * 0.07) * Math.cos(y * 0.09) * 7 + Math.random() * 2;
+  pos.setZ(i, altura);
 }
+terrenoGeo.computeVertexNormals();
 
 const terrenoMat = new THREE.MeshLambertMaterial({ color: 0x228B22, flatShading: true });
 const terreno = new THREE.Mesh(terrenoGeo, terrenoMat);
@@ -40,7 +44,7 @@ scene.add(terreno);
 const aguaGeo = new THREE.CircleGeometry(30, 64);
 const aguaMat = new THREE.MeshPhongMaterial({ color: 0x1ca3ec, opacity: 0.8, transparent: true });
 const agua = new THREE.Mesh(aguaGeo, aguaMat);
-agua.position.set(-40, 0.1, 40);
+agua.position.set(-40, 0.5, 40);
 agua.rotation.x = -Math.PI / 2;
 scene.add(agua);
 
