@@ -2,14 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mundo Abierto Pixel - Demo</title>
+  <title>Lamborghini 3D con Three.js</title>
   <style>
-    body { background: #222; margin: 0; }
-    canvas { background: #444; display: block; margin: 40px auto; border: 2px solid #7ec8e3; }
+    body { margin: 0; overflow: hidden; background: #181818; }
+    #info { position: absolute; top: 10px; left: 10px; color: #fff; font-family: Arial; z-index: 1; }
   </style>
 </head>
 <body>
-  <canvas id="game" width="320" height="240"></canvas>
-  <script src="game.js"></script>
+  <div id="info">
+    <h2>Lamborghini 3D - Three.js</h2>
+    <p>Arrastra para girar, usa la rueda del ratón para acercar/alejar.</p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
