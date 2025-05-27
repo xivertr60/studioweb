@@ -1,0 +1,18 @@
+<input id="input" placeholder="Escribe tu mensaje aquí..." />
+<button onclick="enviar()">Enviar</button>
+<div id="chat"></div>
+<script>
+function enviar() {
+  const msg = document.getElementById('input').value;
+  fetch('http://localhost:3000/chat', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({message: msg})
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('chat').innerHTML += `<p><b>Tú:</b> ${msg}</p>`;
+    document.getElementById('chat').innerHTML += `<p><b>GPT:</b> ${data.reply}</p>`;
+  });
+}
+</script>
