@@ -1,20 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Lamborghini 3D con Three.js</title>
-  <style>
-    body { margin: 0; overflow: hidden; background: #181818; }
-    #info { position: absolute; top: 10px; left: 10px; color: #fff; font-family: Arial; z-index: 1; }
-  </style>
-</head>
+<html>
 <body>
-  <div id="info">
-    <h2>Lamborghini 3D - Three.js</h2>
-    <p>Arrastra para girar, usa la rueda del ratón para acercar/alejar.</p>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="main.js"></script>
+    <input id="url" placeholder="Pega el link aquí" size="50">
+    <button onclick="load()">Cargar</button>
+    <iframe id="frame" style="width:100%;height:90vh;"></iframe>
+    <script>
+    function load() {
+        const url = encodeURIComponent(document.getElementById('url').value);
+        document.getElementById('frame').src = 'http://TU_DOMINIO:3000/proxy?url=' + url;
+    }
+    </script>
 </body>
 </html>
